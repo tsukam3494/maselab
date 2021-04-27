@@ -82,12 +82,23 @@ class DoublyLinkedList:
             else:
                 self.head = None
 
-    def insertionsort(self):
+
+
+def insertionsort(arg):
+    if isinstance(arg,list):
+        for i in range(1, len(arg)):
+            v = arg[i]
+            j = i - 1
+            while j >= 0 and arg[j] > v:
+                arg[j + 1] = arg[j]
+                j = j - 1
+                arg[j + 1] = v
+    elif isinstance(arg,DoublyLinkedList):
         print("insertion sort")
-        if len(self) >= 2:
-            current_node = self.head
+        if len(arg) >= 2:
+            current_node = arg.head
             current_next_node = current_node.next
-            for i in range(1, len(self)):
+            for i in range(1, len(arg)):
                 current_node = current_next_node
                 current_next_node = current_node.next
                 comparative_node = current_node.prev
@@ -97,7 +108,7 @@ class DoublyLinkedList:
                         if current_node.prev is not None:
                             current_node.prev.next = current_node.next
                         else:
-                            self.head = current_node.next
+                            arg.head = current_node.next
                         if current_node.next is not None:
                             current_node.next.prev = current_node.prev
                         # current_nodeを挿入
@@ -112,28 +123,39 @@ class DoublyLinkedList:
                         if current_node.prev is not None:
                             current_node.prev.next = current_node.next
                         else:
-                            self.head = current_node.next
+                            arg.head = current_node.next
                         if current_node.next is not None:
                             current_node.next.prev = current_node.prev
                         # current_nodeを先頭に挿入
-                        self.head.prev = current_node
-                        current_node.next = self.head
+                        arg.head.prev = current_node
+                        current_node.next = arg.head
                         current_node.prev = None
-                        self.head = current_node
+                        arg.head = current_node
                         break
                     comparative_node = comparative_node.prev
 
-    def bubblesort(self):
+def bubblesort(arg):
+    if isinstance(arg,list):
+        flag = 1
+        while flag:
+            flag = 0
+            for j in reversed(range(1, len(arg))):
+                if arg[j] < arg[j - 1]:
+                    tmp = arg[j]
+                    arg[j] = arg[j - 1]
+                    arg[j - 1] = tmp
+                    flag = 1
+    elif isinstance(arg,DoublyLinkedList):
         print("bubble sort")
         # リストが2以上の時ソートする
-        if len(self) >= 2:
+        if len(arg) >= 2:
             # 更新が行われたかどうかのフラグを1に初期化
             flag = 1
 
             while flag:
                 flag = 0
-                current_node = self.head
-                for i in range(1, len(self)):
+                current_node = arg.head
+                for i in range(1, len(arg)):
                     current_node = current_node.next
                     if current_node.prev.key > current_node.key:
                         temp = current_node.key
@@ -141,40 +163,50 @@ class DoublyLinkedList:
                         current_node.prev.key = temp
                         flag = 1
 
-    def selectionsort(self):
+def selectionsort(arg):
+    if isinstance(arg,list):
+        for i in range(1, len(arg)):
+            minj = i
+            for j in range(i, len(arg)):
+                if arg[j] < arg[minj]:
+                    minj = j
+            tmp = arg[i]
+            arg[i] = arg[minj]
+            arg[minj] = tmp
+    elif isinstance(arg,DoublyLinkedList):
         print("selection sort")
         # リストが2以上の時ソートする
-        if len(self) >= 2:
+        if len(arg) >= 2:
             # serch_nodeは最小値を探すノード,min_nodeは暫定の最小値を入れる
-            search_node = self.head
+            search_node = arg.head
             min_node = search_node
-            # 一桁目はself.headが変わるため,別個で探す
-            for i in range(1, len(self)):
+            # 一桁目はarg.headが変わるため,別個で探す
+            for i in range(1, len(arg)):
                 # serach_nodeを更新,2桁目からスタートし最終的に末桁まで更新される
                 search_node = search_node.next
                 # serach_nodeの方がmin_nodeより小さい場合,serach_nodeをmin_nodeにする
                 if min_node.key > search_node.key:
                     min_node = search_node
-            # min_nodeが決定されたため、min_nodeがself.head出ないとき、一桁目に挿入する
-            if not min_node == self.head:
+            # min_nodeが決定されたため、min_nodeがarg.head出ないとき、一桁目に挿入する
+            if not min_node == arg.head:
                 # min_nodeを初期の位置からdelete
                 min_node.prev.next = min_node.next
                 if min_node.next is not None:
                     min_node.next.prev = min_node.prev
                 # min_nodeを先頭に挿入
-                self.head.prev = min_node
-                min_node.next = self.head
+                arg.head.prev = min_node
+                min_node.next = arg.head
                 min_node.prev = None
-                self.head = min_node
+                arg.head = min_node
             # 二桁目以降のソートを行う、代入する桁のノードは変わってしまうためcurrent_nodeは決定する桁の一つ前の桁を示す
-            current_node = self.head
+            current_node = arg.head
             # 二桁目以降の桁数だけループする
-            for j in range(2, len(self)):
+            for j in range(2, len(arg)):
                 # serch_node,min_nodeの初期状態は代入する桁のノード
                 search_node = current_node.next
                 min_node = search_node
                 # 代入する桁より上の桁の数だけループする
-                for k in range(j, len(self)):
+                for k in range(j, len(arg)):
                     # serch_nodeを更新,代入する桁の一つ上の桁からスタートし最終的に末桁まで更新される
                     search_node = search_node.next
                     # serach_nodeの方がmin_nodeより小さい場合,serach_nodeをmin_nodeにする
@@ -195,44 +227,8 @@ class DoublyLinkedList:
                 current_node = current_node.next
 
 
-class ArraySort:
-    def insertionsort(self, arg):
-        for i in range(1, len(arg)):
-            v = arg[i]
-            j = i - 1
-            while j >= 0 and arg[j] > v:
-                arg[j + 1] = arg[j]
-                j = j - 1
-                arg[j + 1] = v
 
-    def bubblesort(self, arg):
-        flag = 1
-        while flag:
-            flag = 0
-            for j in reversed(range(1, len(arg))):
-                if arg[j] < arg[j - 1]:
-                    tmp = arg[j]
-                    arg[j] = arg[j - 1]
-                    arg[j - 1] = tmp
-                    flag = 1
-
-    def selectionsort(self, arg):
-        for i in range(1, len(arg)):
-            minj = i
-            for j in range(i, len(arg)):
-                if arg[j] < arg[minj]:
-                    minj = j
-            tmp = arg[i]
-            arg[i] = arg[minj]
-            arg[minj] = tmp
-
-
-ar = ArraySort()
 alist = [3, 7, 4, 8, 67, 9]
-# ar.insertionsort(alist)
-# ar.bubblesort(alist)
-ar.selectionsort(alist)
-print(alist)
 
 i = DoublyLinkedList()
 i.insert("7H")
@@ -244,6 +240,9 @@ i.insert("9L")
 print(i)
 # i.insertionsort()
 # i.bubblesort()
-i.selectionsort()
+selectionsort(i)
 print(i)
 
+insertionsort(alist)
+print(alist)
+print(isinstance(i,DoublyLinkedList))
