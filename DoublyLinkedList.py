@@ -24,6 +24,7 @@ class DoublyLinkedList:
     >>> print(values)
     1
     """
+
     def __init__(self):
         self.head = None
 
@@ -99,10 +100,10 @@ class DoublyLinkedList:
                 self.head = None
 
 
-def insertionsort(values):
+def insertionsort(values, comp_func):
     """
     >>> values1 = [5,2,4,6,1,3]
-    >>> insertionsort(values1)
+    >>> insertionsort(values1, comp_func=lambda x, y: x < y)
     insertion sort
     >>> print(values1)
     [1, 2, 3, 4, 5, 6]
@@ -110,7 +111,7 @@ def insertionsort(values):
     >>> values2.insert_list([5,2,4,6,1,3])
     >>> print(values2)
     5,2,4,6,1,3
-    >>> insertionsort(values2)
+    >>> insertionsort(values2, comp_func=lambda x, y: x < y)
     insertion sort
     >>> print(values2)
     1,2,3,4,5,6
@@ -120,7 +121,7 @@ def insertionsort(values):
         for i in range(1, len(values)):
             v = values[i]
             j = i - 1
-            while j >= 0 and int(re.sub(r"\D", "", str(values[j]))) > int(re.sub(r"\D", "", str(v))):
+            while j >= 0 and comp_func(int(re.sub(r"\D", "", str(v))), int(re.sub(r"\D", "", str(values[j])))):
                 values[j + 1] = values[j]
                 j = j - 1
             values[j + 1] = v
@@ -132,7 +133,8 @@ def insertionsort(values):
                 # v.keyはソート途中で変わってしまうため初期値をvkeyに保管
                 vkey = v.key
                 j = v.prev
-                while j is not None and int(re.sub(r"\D", "", str(j.key))) > int(re.sub(r"\D", "", str(vkey))):
+                while j is not None \
+                        and comp_func(int(re.sub(r"\D", "", str(vkey))), int(re.sub(r"\D", "", str(j.key)))):
                     j.next.key = j.key
                     j = j.prev
                 if j is None:
@@ -143,10 +145,10 @@ def insertionsort(values):
                 v = v.next
 
 
-def bubblesort(values):
+def bubblesort(values, comp_func):
     """
     >>> values1 = [5,3,2,4,1]
-    >>> bubblesort(values1)
+    >>> bubblesort(values1, comp_func=lambda x, y: x < y)
     bubble sort
     >>> print(values1)
     [1, 2, 3, 4, 5]
@@ -154,7 +156,7 @@ def bubblesort(values):
     >>> values2.insert_list([5,3,2,4,1])
     >>> print(values2)
     5,3,2,4,1
-    >>> bubblesort(values2)
+    >>> bubblesort(values2, comp_func=lambda x, y: x < y)
     bubble sort
     >>> print(values2)
     1,2,3,4,5
@@ -165,7 +167,7 @@ def bubblesort(values):
         while flag:
             flag = 0
             for j in reversed(range(1, len(values))):
-                if int(re.sub(r"\D", "", str(values[j]))) < int(re.sub(r"\D", "", str(values[j - 1]))):
+                if comp_func(int(re.sub(r"\D", "", str(values[j]))), int(re.sub(r"\D", "", str(values[j - 1])))):
                     tmp = values[j]
                     values[j] = values[j - 1]
                     values[j - 1] = tmp
@@ -181,17 +183,17 @@ def bubblesort(values):
                 v = values.head
                 for i in range(1, len(values)):
                     v = v.next
-                    if int(re.sub(r"\D", "", str(v.prev.key))) > int(re.sub(r"\D", "", str(v.key))):
+                    if comp_func(int(re.sub(r"\D", "", str(v.key))), int(re.sub(r"\D", "", str(v.prev.key)))):
                         temp = v.key
                         v.key = v.prev.key
                         v.prev.key = temp
                         flag = 1
 
 
-def selectionsort(values):
+def selectionsort(values, comp_func):
     """
     >>> values1 = [5,6,4,2,1,3]
-    >>> selectionsort(values1)
+    >>> selectionsort(values1, comp_func=lambda x, y: x < y)
     selection sort
     >>> print(values1)
     [1, 2, 3, 4, 5, 6]
@@ -199,7 +201,7 @@ def selectionsort(values):
     >>> values2.insert_list([5,6,4,2,1,3])
     >>> print(values2)
     5,6,4,2,1,3
-    >>> selectionsort(values2)
+    >>> selectionsort(values2, comp_func=lambda x, y: x < y)
     selection sort
     >>> print(values2)
     1,2,3,4,5,6
@@ -209,7 +211,7 @@ def selectionsort(values):
         for i in range(0, len(values) - 1):
             minj = i
             for j in range(i, len(values)):
-                if int(re.sub(r"\D", "", str(values[j]))) < int(re.sub(r"\D", "", str(values[minj]))):
+                if comp_func(int(re.sub(r"\D", "", str(values[j]))), int(re.sub(r"\D", "", str(values[minj])))):
                     minj = j
             tmp = values[i]
             values[i] = values[minj]
@@ -223,7 +225,7 @@ def selectionsort(values):
                 node_j = v
                 minj = v
                 for j in range(i, len(values)):
-                    if int(re.sub(r"\D", "", str(node_j.key))) < int(re.sub(r"\D", "", str(minj.key))):
+                    if comp_func(int(re.sub(r"\D", "", str(node_j.key))), int(re.sub(r"\D", "", str(minj.key)))):
                         minj = node_j
                     node_j = node_j.next
                 tmp = v.key
@@ -253,7 +255,7 @@ def stablesortcheck(values, func):
     """
     values1 = copy.deepcopy(values)
     values2 = copy.deepcopy(values)
-    func(values2)
+    func(values2, comp_func=lambda x, y: x < y)
     print(values2)
     if isinstance(values1, DoublyLinkedList):
         values1 = str(values1).split(",")
@@ -271,6 +273,36 @@ def stablesortcheck(values, func):
     print("Stable")
     return
 
+
+values1 = [4, 7, 3, 8, 4, 23]
+values2 = [4, 7, 3, 8, 4, 23]
+values3 = [4, 7, 3, 8, 4, 23]
+insertionsort(values1, comp_func=lambda x, y: x < y)
+print(values1)
+bubblesort(values2, comp_func=lambda x, y: x > y)
+print(values2)
+j = DoublyLinkedList()
+j.insert_list(values3)
+selectionsort(values3, comp_func=lambda x, y: True if ((x % 2 == 1 and y % 2 == 0)
+                                                       or (x % 2 == y % 2 and x < y)) else False)
+print(values3)
+
+values4 = [4, 7, 3, 8, 4, 23]
+d_list1 = DoublyLinkedList()
+d_list1.insert_list(values4)
+d_list2 = DoublyLinkedList()
+d_list2.insert_list(values4)
+d_list3 = DoublyLinkedList()
+d_list3.insert_list(values4)
+selectionsort(d_list1, comp_func=lambda x, y: x < y)
+print(d_list1)
+insertionsort(d_list2, comp_func=lambda x, y: x > y)
+print(d_list2)
+bubblesort(d_list3, comp_func=lambda x, y: True if ((x % 2 == 1 and y % 2 == 0)
+                                                    or (x % 2 == y % 2 and x < y)) else False)
+print(d_list3)
+
 if __name__ == '__main__':
     import doctest
+
     doctest.testmod()
