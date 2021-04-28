@@ -120,7 +120,7 @@ def insertionsort(values):
         for i in range(1, len(values)):
             v = values[i]
             j = i - 1
-            while j >= 0 and re.sub(r"\D", "", str(values[j])) > re.sub(r"\D", "", str(v)):
+            while j >= 0 and int(re.sub(r"\D", "", str(values[j]))) > int(re.sub(r"\D", "", str(v))):
                 values[j + 1] = values[j]
                 j = j - 1
             values[j + 1] = v
@@ -132,7 +132,7 @@ def insertionsort(values):
                 # v.keyはソート途中で変わってしまうため初期値をvkeyに保管
                 vkey = v.key
                 j = v.prev
-                while j is not None and re.sub(r"\D", "", str(j.key)) > re.sub(r"\D", "", str(vkey)):
+                while j is not None and int(re.sub(r"\D", "", str(j.key))) > int(re.sub(r"\D", "", str(vkey))):
                     j.next.key = j.key
                     j = j.prev
                 if j is None:
@@ -165,7 +165,7 @@ def bubblesort(values):
         while flag:
             flag = 0
             for j in reversed(range(1, len(values))):
-                if re.sub(r"\D", "", str(values[j])) < re.sub(r"\D", "", str(values[j - 1])):
+                if int(re.sub(r"\D", "", str(values[j]))) < int(re.sub(r"\D", "", str(values[j - 1]))):
                     tmp = values[j]
                     values[j] = values[j - 1]
                     values[j - 1] = tmp
@@ -181,7 +181,7 @@ def bubblesort(values):
                 v = values.head
                 for i in range(1, len(values)):
                     v = v.next
-                    if re.sub(r"\D", "", str(v.prev.key)) > re.sub(r"\D", "", str(v.key)):
+                    if int(re.sub(r"\D", "", str(v.prev.key))) > int(re.sub(r"\D", "", str(v.key))):
                         temp = v.key
                         v.key = v.prev.key
                         v.prev.key = temp
@@ -209,7 +209,7 @@ def selectionsort(values):
         for i in range(0, len(values) - 1):
             minj = i
             for j in range(i, len(values)):
-                if re.sub(r"\D", "", str(values[j])) < re.sub(r"\D", "", str(values[minj])):
+                if int(re.sub(r"\D", "", str(values[j]))) < int(re.sub(r"\D", "", str(values[minj]))):
                     minj = j
             tmp = values[i]
             values[i] = values[minj]
@@ -223,7 +223,7 @@ def selectionsort(values):
                 node_j = v
                 minj = v
                 for j in range(i, len(values)):
-                    if re.sub(r"\D", "", str(node_j.key)) < re.sub(r"\D", "", str(minj.key)):
+                    if int(re.sub(r"\D", "", str(node_j.key))) < int(re.sub(r"\D", "", str(minj.key))):
                         minj = node_j
                     node_j = node_j.next
                 tmp = v.key
@@ -270,7 +270,6 @@ def stablesortcheck(values, func):
                         return
     print("Stable")
     return
-
 
 if __name__ == '__main__':
     import doctest
