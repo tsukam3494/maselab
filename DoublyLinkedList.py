@@ -115,7 +115,7 @@ class AbstractSort:
 
 
 class InsertionSort(AbstractSort):
-    def sort(self, values: "int or str", comp_func: "lambda function"):
+    def sort(self, values: "list or doublylinkedlist", comp_func: "lambda function"):
         """
         >>> values1 = [5,2,4,6,1,3]
         >>> _c = get_sort_instance("insertion")
@@ -170,7 +170,7 @@ class InsertionSort(AbstractSort):
 
 
 class BubbleSort(AbstractSort):
-    def sort(self, values: "int or str", comp_func: "lambda function"):
+    def sort(self, values: "list or doublylinkedlist", comp_func: "lambda function"):
         """
         >>> values1 = [5,3,2,4,1]
         >>> _c = get_sort_instance("bubble")
@@ -225,7 +225,7 @@ class BubbleSort(AbstractSort):
 
 
 class SelectionSort(AbstractSort):
-    def sort(self, values: "int or str", comp_func: "lambda function"):
+    def sort(self, values: "list or doublylinkedlist", comp_func: "lambda function"):
         """
         >>> values1 = [5,6,4,2,1,3]
         >>> _c = get_sort_instance("selection")
