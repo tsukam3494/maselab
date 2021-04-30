@@ -286,7 +286,7 @@ def get_sort_instance(algorithm_name: "str"):
         return SelectionSort()
 
 
-def stablesortcheck(values, algorithm_name: "str"):
+def stablesortcheck(values: "list or doublylinkedlist", algorithm_name: "str"):
     """
     >>> values1 = ["H4", "C9", "S4", "D2", "C3"]
     >>> values2 = DoublyLinkedList()
