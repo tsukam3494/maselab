@@ -69,18 +69,23 @@ class DoublyLinkedList:
     def delete(self, key):
         if self.head is not None:
             current_node = self.head
+            # current_nodeは先頭から末尾まで変わっていく
             while current_node is not None:
                 if key == current_node.key:
+                    # current_nodeが先頭出ない場合
                     if current_node.prev is not None:
                         current_node.prev.next = current_node.next
+                    # current_nodeが先頭である場合
                     else:
                         self.head = current_node.next
+                    # current_nodeが末端である場合
                     if current_node.next is not None:
                         current_node.next.prev = current_node.prev
                     break
                 current_node = current_node.next
 
     def deletefirst(self):
+        # 先頭を二番目のノードに変え、二番目のノードのprevをNoneにする
         if self.head is not None:
             if self.head.next is not None:
                 self.head.next.prev = None
@@ -89,6 +94,7 @@ class DoublyLinkedList:
     def deletelast(self):
         if self.head is not None:
             current_node = self.head
+            # 要素が2つ以上だった場合
             if self.head.next is not None:
                 while True:
                     if current_node.next is None:
@@ -96,6 +102,7 @@ class DoublyLinkedList:
                         break
                     else:
                         current_node = current_node.next
+            # 要素が1つだった場合
             else:
                 self.head = None
 
