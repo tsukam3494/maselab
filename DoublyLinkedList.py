@@ -85,6 +85,7 @@ class DoublyLinkedList:
                 current_node = current_node.next
 
     def deletefirst(self):
+        # 先頭を二番目のノードに変え、二番目のノードのprevをNoneにする
         if self.head is not None:
             if self.head.next is not None:
                 self.head.next.prev = None
@@ -93,6 +94,7 @@ class DoublyLinkedList:
     def deletelast(self):
         if self.head is not None:
             current_node = self.head
+            # 要素が2つ以上だった場合
             if self.head.next is not None:
                 while True:
                     if current_node.next is None:
@@ -100,6 +102,7 @@ class DoublyLinkedList:
                         break
                     else:
                         current_node = current_node.next
+            # 要素が1つだった場合
             else:
                 self.head = None
 
@@ -127,33 +130,41 @@ class InsertionSort(AbstractSort):
         >>> print(values2)
         1,2,3,4,5,6
         """
+        # listが与えられた場合
         if isinstance(values, list):
             print("insertion sort")
             for i in range(1, len(values)):
-                v = values[i]
+                target_data = values[i]
                 j = i - 1
-                while j >= 0 and comp_func(int(re.sub(r"\D", "", str(v))), int(re.sub(r"\D", "", str(values[j])))):
+                # target_data,value[j]を数字のみ抽出して比較
+                while j >= 0 and comp_func(int(re.sub(r"\D", "", str(target_data))),
+                                           int(re.sub(r"\D", "", str(values[j])))):
                     values[j + 1] = values[j]
                     j = j - 1
-                values[j + 1] = v
+                values[j + 1] = target_data
+        # 双方向リストが与えられたとき
         elif isinstance(values, DoublyLinkedList):
             print("insertion sort")
             if len(values) >= 2:
-                v = values.head.next
-                while v is not None:
-                    # v.keyはソート途中で変わってしまうため初期値をvkeyに保管
-                    vkey = v.key
-                    j = v.prev
-                    while j is not None \
-                            and comp_func(int(re.sub(r"\D", "", str(vkey))), int(re.sub(r"\D", "", str(j.key)))):
-                        j.next.key = j.key
-                        j = j.prev
-                    if j is None:
-                        values.head.key = vkey
+                target_node = values.head.next
+                while target_node is not None:
+                    # target_node.keyはソート途中で変わってしまうため初期値をtarget_node_keyに保管
+                    target_node_key = target_node.key
+                    compare_node = target_node.prev
+                    # target_node_key,compare_node.keyを数字のみ抽出して比較
+                    while compare_node is not None \
+                            and comp_func(int(re.sub(r"\D", "", str(target_node_key))),
+                                          int(re.sub(r"\D", "", str(compare_node.key)))):
+                        compare_node.next.key = compare_node.key
+                        compare_node = compare_node.prev
+                    # target_nodeより大きい数字がそれより前に無かった時
+                    if compare_node is None:
+                        values.head.key = target_node_key
+                    # target_nodeより大きい数字がそれより前にあった場合
                     else:
-                        j.next.key = vkey
-                    # vを更新
-                    v = v.next
+                        compare_node.next.key = target_node_key
+                    # target_nodeを更新
+                    target_node = target_node.next
 
 
 class BubbleSort(AbstractSort):
@@ -174,33 +185,41 @@ class BubbleSort(AbstractSort):
         >>> print(values2)
         1,2,3,4,5
         """
+        # listが与えられた場合
         if isinstance(values, list):
             print("bubble sort")
-            flag = 1
-            while flag:
-                flag = 0
+            exchange_flag = 1
+            while exchange_flag:
+                exchange_flag = 0
                 for j in reversed(range(1, len(values))):
-                    if comp_func(int(re.sub(r"\D", "", str(values[j]))), int(re.sub(r"\D", "", str(values[j - 1])))):
+                    # values[j],values[j-1]を数字のみ抽出して比較
+                    if comp_func(int(re.sub(r"\D", "", str(values[j]))),
+                                 int(re.sub(r"\D", "", str(values[j - 1])))):
+                        # 交換
                         tmp = values[j]
                         values[j] = values[j - 1]
                         values[j - 1] = tmp
-                        flag = 1
+
+                        exchange_flag = 1
+        # 双方向リストが与えられた場合
         elif isinstance(values, DoublyLinkedList):
             print("bubble sort")
-            # リストが2以上の時ソートする
             if len(values) >= 2:
-                # 更新が行われたかどうかのフラグを1に初期化
-                flag = 1
-                while flag:
-                    flag = 0
-                    v = values.head
+                exchange_flag = 1
+                while exchange_flag:
+                    exchange_flag = 0
+                    target_node = values.head
                     for i in range(1, len(values)):
-                        v = v.next
-                        if comp_func(int(re.sub(r"\D", "", str(v.key))), int(re.sub(r"\D", "", str(v.prev.key)))):
-                            temp = v.key
-                            v.key = v.prev.key
-                            v.prev.key = temp
-                            flag = 1
+                        target_node = target_node.next
+                        # target_node.key,target_node.prev.keyを数字のみ抽出して比較
+                        if comp_func(int(re.sub(r"\D", "", str(target_node.key))),
+                                     int(re.sub(r"\D", "", str(target_node.prev.key)))):
+                            # 交換
+                            tmp = target_node.key
+                            target_node.key = target_node.prev.key
+                            target_node.prev.key = tmp
+
+                            exchange_flag = 1
 
 
 class SelectionSort(AbstractSort):
@@ -221,32 +240,39 @@ class SelectionSort(AbstractSort):
         >>> print(values2)
         1,2,3,4,5,6
         """
+        # listが与えられた場合
         if isinstance(values, list):
             print("selection sort")
             for i in range(0, len(values) - 1):
-                minj = i
+                min_value_index_after_target = i
                 for j in range(i, len(values)):
-                    if comp_func(int(re.sub(r"\D", "", str(values[j]))), int(re.sub(r"\D", "", str(values[minj])))):
-                        minj = j
+                    # values[j],min_value_index_after_targetを数字のみ抽出して比較
+                    if comp_func(int(re.sub(r"\D", "", str(values[j]))),
+                                 int(re.sub(r"\D", "", str(values[min_value_index_after_target])))):
+                        min_value_index_after_target = j
                 tmp = values[i]
-                values[i] = values[minj]
-                values[minj] = tmp
+                values[i] = values[min_value_index_after_target]
+                values[min_value_index_after_target] = tmp
+        # 双方向リストが与えられた場合
         elif isinstance(values, DoublyLinkedList):
             print("selection sort")
-            # リストが2以上の時ソートする
             if len(values) >= 2:
-                v = values.head
+                target_node = values.head
                 for i in range(0, len(values) - 1):
-                    node_j = v
-                    minj = v
+                    compare_node = target_node
+                    min_value_after_target = target_node
                     for j in range(i, len(values)):
-                        if comp_func(int(re.sub(r"\D", "", str(node_j.key))), int(re.sub(r"\D", "", str(minj.key)))):
-                            minj = node_j
-                        node_j = node_j.next
-                    tmp = v.key
-                    v.key = minj.key
-                    minj.key = tmp
-                    v = v.next
+                        # compare_node.key,target_node.prev.keyを数字のみ抽出して比較
+                        if comp_func(int(re.sub(r"\D", "", str(compare_node.key))),
+                                     int(re.sub(r"\D", "", str(min_value_after_target.key)))):
+                            min_value_after_target = compare_node
+                        compare_node = compare_node.next
+                    # 交換
+                    tmp = target_node.key
+                    target_node.key = min_value_after_target.key
+                    min_value_after_target.key = tmp
+
+                    target_node = target_node.next
 
 
 def get_sort_instance(algorithm_name):
@@ -277,20 +303,24 @@ def stablesortcheck(values, algorithm_name):
     ['D2', 'C3', 'S4', 'H4', 'C9']
     Not Stable
     """
-
+    # 与えられたリストを複製(values1は初期状態,values2はソート後を入れる)
     values1 = copy.deepcopy(values)
     values2 = copy.deepcopy(values)
+    # 実体化しソートを使用
     _c = get_sort_instance(algorithm_name)
     _c.sort(values2, comp_func=lambda x, y: x < y)
     print(values2)
+    # 双方向リストであれば、リストに変換
     if isinstance(values1, DoublyLinkedList):
         values1 = str(values1).split(",")
     if isinstance(values2, DoublyLinkedList):
         values2 = str(values2).split(",")
+
     for i in range(len(values1)):
         for j in range(i + 1, len(values1)):
             for k in range(len(values2)):
                 for l in range(k + 1, len(values2)):
+                    # 数字が一緒のペアで、ソート前と後で前後関係が入れ替わっている時
                     if (re.sub(r"\D", "", str(values1[i])) == re.sub(r"\D", "", str(values1[j]))
                             and values1[i] == values2[l]
                             and values1[j] == values2[k]):
@@ -300,6 +330,7 @@ def stablesortcheck(values, algorithm_name):
     return
 
 
+# ラムダ関数使用例
 values1 = [4, 7, 3, 8, 4, 23]
 values2 = [4, 7, 3, 8, 4, 23]
 values3 = [4, 7, 3, 8, 4, 23]
