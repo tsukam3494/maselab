@@ -24,6 +24,7 @@ class DoublyLinkedList:
     >>> print(values)
     1
     """
+
     def __init__(self):
         self.head = None
 
@@ -52,7 +53,7 @@ class DoublyLinkedList:
                 current_node = current_node.next
             return counter
 
-    def insert(self, key):
+    def insert(self, key: "int or str"):
         new_node = Node(key)
         if self.head is None:
             self.head = new_node
@@ -61,25 +62,30 @@ class DoublyLinkedList:
             new_node.next = self.head
             self.head = new_node
 
-    def insert_list(self, values):
+    def insert_list(self, values: "list"):
         for value in reversed(values):
             self.insert(value)
 
-    def delete(self, key):
+    def delete(self, key: "int or str"):
         if self.head is not None:
             current_node = self.head
+            # current_nodeは先頭から末尾まで変わっていく
             while current_node is not None:
                 if key == current_node.key:
+                    # current_nodeが先頭出ない場合
                     if current_node.prev is not None:
                         current_node.prev.next = current_node.next
+                    # current_nodeが先頭である場合
                     else:
                         self.head = current_node.next
+                    # current_nodeが末端である場合
                     if current_node.next is not None:
                         current_node.next.prev = current_node.prev
                     break
                 current_node = current_node.next
 
     def deletefirst(self):
+        # 先頭を二番目のノードに変え、二番目のノードのprevをNoneにする
         if self.head is not None:
             if self.head.next is not None:
                 self.head.next.prev = None
@@ -88,6 +94,7 @@ class DoublyLinkedList:
     def deletelast(self):
         if self.head is not None:
             current_node = self.head
+            # 要素が2つ以上だった場合
             if self.head.next is not None:
                 while True:
                     if current_node.next is None:
@@ -95,11 +102,12 @@ class DoublyLinkedList:
                         break
                     else:
                         current_node = current_node.next
+            # 要素が1つだった場合
             else:
                 self.head = None
 
 
-def insertionsort(values):
+def insertionsort(values: "list or doublylinkedlist"):
     """
     >>> values1 = [5,2,4,6,1,3]
     >>> insertionsort(values1)
@@ -271,6 +279,8 @@ def stablesortcheck(values, func):
     print("Stable")
     return
 
+
 if __name__ == '__main__':
     import doctest
+
     doctest.testmod()
