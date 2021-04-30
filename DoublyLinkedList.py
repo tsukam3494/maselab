@@ -1,9 +1,10 @@
 import re
 import copy
+from abc import abstractmethod
 
 
 class Node:
-    def __init__(self, key):
+    def __init__(self, key: "int or str"):
         self.key = key
         self.next = None
         self.prev = None
@@ -53,7 +54,7 @@ class DoublyLinkedList:
                 current_node = current_node.next
             return counter
 
-    def insert(self, key):
+    def insert(self, key: "int or str"):
         new_node = Node(key)
         if self.head is None:
             self.head = new_node
@@ -62,11 +63,11 @@ class DoublyLinkedList:
             new_node.next = self.head
             self.head = new_node
 
-    def insert_list(self, values):
+    def insert_list(self, values: "list"):
         for value in reversed(values):
             self.insert(value)
 
-    def delete(self, key):
+    def delete(self, key: "int or str"):
         if self.head is not None:
             current_node = self.head
             # current_nodeは先頭から末尾まで変わっていく
@@ -108,12 +109,13 @@ class DoublyLinkedList:
 
 
 class AbstractSort:
-    def sort(self, values, comp_func):
+    @abstractmethod
+    def sort(self, values: "list or doublylinkedlist", comp_func: "lambda function"):
         raise NotImplementedError
 
 
 class InsertionSort(AbstractSort):
-    def sort(self, values, comp_func):
+    def sort(self, values: "int or str", comp_func: "lambda function"):
         """
         >>> values1 = [5,2,4,6,1,3]
         >>> _c = get_sort_instance("insertion")
@@ -168,7 +170,7 @@ class InsertionSort(AbstractSort):
 
 
 class BubbleSort(AbstractSort):
-    def sort(self, values, comp_func):
+    def sort(self, values: "int or str", comp_func: "lambda function"):
         """
         >>> values1 = [5,3,2,4,1]
         >>> _c = get_sort_instance("bubble")
@@ -223,7 +225,7 @@ class BubbleSort(AbstractSort):
 
 
 class SelectionSort(AbstractSort):
-    def sort(self, values, comp_func):
+    def sort(self, values: "int or str", comp_func: "lambda function"):
         """
         >>> values1 = [5,6,4,2,1,3]
         >>> _c = get_sort_instance("selection")
@@ -275,7 +277,7 @@ class SelectionSort(AbstractSort):
                     target_node = target_node.next
 
 
-def get_sort_instance(algorithm_name):
+def get_sort_instance(algorithm_name: "str"):
     if algorithm_name == "insertion":
         return InsertionSort()
     elif algorithm_name == "bubble":
@@ -284,7 +286,7 @@ def get_sort_instance(algorithm_name):
         return SelectionSort()
 
 
-def stablesortcheck(values, algorithm_name):
+def stablesortcheck(values, algorithm_name: "str"):
     """
     >>> values1 = ["H4", "C9", "S4", "D2", "C3"]
     >>> values2 = DoublyLinkedList()
